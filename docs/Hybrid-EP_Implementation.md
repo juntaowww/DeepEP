@@ -273,9 +273,9 @@ The DOCA backend also honors the standard NCCL InfiniBand/RoCE settings when cre
 
 | Environment Variable | Description |
 |---------------------|-------------|
-| `NCCL_IB_GID_INDEX` | GID table index used for RoCE. The default `-1` selects a GID automatically |
+| `NCCL_IB_GID_INDEX` | GID table index used for RoCE. The default `-1` selects a GID automatically; an explicit index must reference a configured GID |
 | `NCCL_IB_ADDR_FAMILY` | Address family (`AF_INET` or `AF_INET6`) used during automatic GID selection. The default is `AF_INET` |
-| `NCCL_IB_TC` | RoCE traffic class in the range 0–255. The default is `0` |
+| `NCCL_IB_TC` | RoCE traffic class in the range 0–255. Unset or `-1` uses the default `0` |
 
 ### 4.2 Buffer Allocation
 

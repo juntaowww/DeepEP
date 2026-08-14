@@ -248,8 +248,8 @@
      }
      union ibv_gid gid;
      CALL_CHECK(ibv_query_gid(context, portNum, *gidIndex, &gid));
-     if (!validGid(&gid)) {
-       fprintf(stderr, "[Error] NCCL_IB_GID_INDEX=%d is not a valid routable GID\n",
+     if (!configuredGid(&gid)) {
+       fprintf(stderr, "[Error] NCCL_IB_GID_INDEX=%d does not reference a configured GID\n",
                *gidIndex);
        return ncclInvalidArgument;
      }

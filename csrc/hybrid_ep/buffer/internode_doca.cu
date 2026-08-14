@@ -18,9 +18,9 @@ static int get_env_int_in_range(const char* name, int default_value, int min_val
   const long parsed_value = std::strtol(raw_value, &end, 10);
   if (errno != 0 || end == raw_value || *end != '\0' ||
       parsed_value < min_value || parsed_value > max_value) {
-    fprintf(stderr, "[Error] %s must be an integer in [%d, %d], got '%s'\n",
-            name, min_value, max_value, raw_value);
-    std::abort();
+    fprintf(stderr, "[Warning] %s must be an integer in [%d, %d], got '%s'; using default %d\n",
+            name, min_value, max_value, raw_value, default_value);
+    return default_value;
   }
   return static_cast<int>(parsed_value);
 }
@@ -211,8 +211,10 @@ int setup_qp_attr_for_modify(struct ibv_port_attr *port_attr, struct doca_verbs_
   struct remote_info *l_info, struct remote_info *r_info,
   struct ibv_context *ib_context) {
   int status = 0;
+  static const int configured_traffic_class =
+      get_env_int_in_range("NCCL_IB_TC", DEF_IB_TC, -1, 255);
   const auto traffic_class = static_cast<uint8_t>(
-      get_env_int_in_range("NCCL_IB_TC", DEF_IB_TC, 0, 255));
+      configured_traffic_class == -1 ? DEF_IB_TC : configured_traffic_class);
   status = doca_verbs_qp_attr_set_dest_qp_num(qp_attr, r_info->qpn);
   assert(status == 0);
   struct doca_verbs_ah_attr *ah = nullptr;
